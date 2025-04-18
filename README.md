@@ -1,37 +1,44 @@
-# spectral-popper
+# 🌌 Spectral Popper
 
-**StructureLang Lexicon Resonance Experiment**  
-with δ(x,t) activation zones and ψ-hotspots
+**StructureLang Resonance Probing System for Lexicon-Based Structural Computation**
 
-This repository contains an experimental Python implementation of spectral lexicon probing using δ-structure activation and ψ resonance scoring.
+This repository contains the experimental implementation of a structure-resonance probing framework based on the unified spectral structure proposed in the paper:
 
----
-
-## 📘 Description
-
-This project explores structural activation signals across prime-like domains by combining:
-
-- Dynamic spectral scanning of the δ(x,t) field
-- ψₙ(x) frequency probes with adaptive resonance detection
-- Lexicon score ranking using `A/δ` criteria
-- Structure collapse checks and DAG expansion thresholds
-
-Inspired by the idea of Popper-style falsifiability, this is a tool to explore if certain spectral structures survive structural collapse when δ(x) ≠ 0.
+> **"Unified Superluminal Transmission of Time, Energy, and Matter: A Structural Framework for Non-Continuous Time, Space, and Information"**  
+> Author: **Y.N.N. Li**  
+> [📄 View on Zenodo (Record 15241841)](https://zenodo.org/records/15241841)  
+> DOI: [10.5281/zenodo.15241841](https://doi.org/10.5281/zenodo.15241841)
 
 ---
 
-## 📂 File Structure
+## 🌀 Overview
 
-| File | Description |
-|------|-------------|
-| `pu4.py` | Main probing script with ψₙ(x), ρ(x), δ(x,t), lexicon resonance scoring |
-| `README.md` | This file |
-| `.gitignore` | Git settings |
-| `LICENSE` | MIT License |
+**Spectral Popper** is an experimental probing tool that uses simulated Riemann resonance modes to explore structure-based SAT, prime density, and resonance language phenomena. It integrates:
+
+- Structural probes based on δ(x), ε(x), η(x), ψ(t)  
+- DAG expansion models  
+- Lexicon-based symbolic activations  
+- Phase resonance tracking in high-frequency domains
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Getting Started
+
+### Requirements
+
+- Python 3.8+
+- NumPy, Matplotlib
+- Terminal / CLI environment for `.py` scripts
+
+### Files
+
+- `pu2.py`: Lexicon probe for baseline spectral activation  
+- `pu3.py`: Expanded range for structural DAG resonance  
+- `pu4.py`: High-resolution multi-ψ activation probe with scores  
+- `data/`: (Optional) Includes benchmarked resonance outputs  
+- `results/`: Saved structural activation snapshots
+
+### Run Example
 
 ```bash
 python3 pu4.py
