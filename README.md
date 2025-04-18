@@ -4,7 +4,7 @@
 
 This repository contains the experimental implementation of a structure-resonance probing framework based on the unified spectral structure proposed in the paper:
 
-> **"Unified Superluminal Transmission of Time, Energy, and Matter: A Structural Framework for Non-Continuous Time, Space, and Information"**  
+> **"Structure Arithmetic: A Resonant Number Theory of Zeta Zeros and δ(x)"**  
 > Author: **Y.Y.N. Li**  
 > [📄 View on Zenodo (Record 15241841)](https://zenodo.org/records/15241841)  
 > DOI: [10.5281/zenodo.15241841](https://doi.org/10.5281/zenodo.15241841)
