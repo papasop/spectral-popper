@@ -31,9 +31,7 @@ This repository contains the experimental implementation of a structure-resonanc
 - Terminal / CLI environment for `.py` scripts
 
 ### Files
-
-- `pu2.py`: Lexicon probe for baseline spectral activation  
-- `pu3.py`: Expanded range for structural DAG resonance  
+    
 - `pu4.py`: High-resolution multi-ψ activation probe with scores  
 - `data/`: (Optional) Includes benchmarked resonance outputs  
 - `results/`: Saved structural activation snapshots
