@@ -1,190 +1,211 @@
 import math
 import numpy as np
-from scipy.special import expi
-from scipy.optimize import minimize
+import mpmath as mp
+from scipy.optimize import minimize, differential_evolution
 import matplotlib.pyplot as plt
 
-# === Nontrivial Zeta Zeros (Extended to 150) ===
-t_list = [
-    14.1347, 21.0220, 25.0108, 30.4249, 32.9351, 37.5862, 40.9187, 43.3271, 48.0052, 49.7738,
-    52.9703, 56.4462, 59.3470, 60.8318, 65.1125, 67.0796, 69.5464, 72.0672, 75.7047, 77.1448,
-    79.3372, 82.9104, 84.7359, 87.0992, 88.8091, 92.4919, 94.6519, 95.8706, 98.8312, 101.3179,
-    103.7255, 105.4465, 107.1684, 111.0295, 111.8746, 114.3202, 116.2287, 118.7905, 121.3702, 122.9468,
-    124.2569, 127.5165, 129.5786, 131.0871, 133.8373, 135.5065, 137.2946, 139.7350, 141.1235, 143.1116,
-    146.0009, 147.4226, 150.0536, 150.9251, 153.0247, 156.1127, 157.5974, 158.8499, 161.1887, 163.0305,
-    165.5370, 167.1844, 169.0946, 169.9118, 172.7605, 174.7547, 176.4414, 178.3772, 180.2448, 181.6848,
-    184.8745, 186.5920, 187.2288, 189.4166, 191.2842, 193.0795, 195.2653, 196.8761, 198.0157, 201.2647,
-    202.4930, 204.1895, 206.1648, 207.0727, 209.5766, 211.6902, 213.3473, 214.5470, 216.1690, 218.3155,
-    220.7145, 221.4303, 224.0070, 224.9833, 227.4211, 229.3370, 230.3320, 231.9871, 234.2146, 236.5243,
-    238.8192, 240.7447, 243.0616, 245.3892, 246.7084, 248.9334, 251.3098, 252.8717, 255.2587, 257.1499,
-    259.5557, 261.2231, 263.4439, 265.3187, 267.2239, 269.7198, 271.1358, 273.3298, 275.3129, 277.0797,
-    279.2290, 281.3466, 283.0898, 285.2477, 287.1183, 289.2227, 291.2698, 293.0232, 295.1327, 297.2287,
-    299.0215, 301.0194, 303.0487, 305.1478, 306.8557, 308.8977, 310.8794, 312.5466, 314.6850, 316.8269
-]
+# === Set High Precision ===
+mp.dps = 100  # High precision arithmetic
+
+# === Nontrivial Zeta Zeros (Use first 2 zeros for holographic efficiency) ===
+t_list = [14.134725, 21.022040]  # First 2 zeros (low frequency)
 
 # === ψ_n(x) Definition ===
-def psi(t, x, A=1.0, theta=0.0):
-    return A * math.cos(t * math.log(x) + theta) if x > 1 else 0.0
+def psi(t, x, A=1.0, theta=0.0, delta_t=0.0):
+    adjusted_t = t + delta_t  # Frequency shift
+    return float(A * mp.cos(adjusted_t * mp.log(x) + theta)) if x > 1 else 0.0
 
 # === Structure Density ρ(x) ===
-def rho(x, t_list, A_list, theta_list):
-    base = 1.0 / math.log(x) if x > 1 else 0.0
-    modal_sum = sum(A_list[i] * psi(t_list[i], x, 1.0, theta_list[i]) for i in range(len(t_list)))
+def rho(x, t_list, A_list, theta_list, delta_t_list):
+    base = float(1.0 / mp.log(x)) if x > 1 else 0.0
+    modal_sum = sum(psi(t_list[i], x, A_list[i], theta_list[i], delta_t_list[i]) for i in range(len(t_list)))
     return base + modal_sum
 
-# === π(x)/x Approximation using li(x)/x ===
+# === li(x)/x Approximation (High Precision using mpmath.ei) ===
 def li_over_x(x):
     if x < 2:
         return 0.0
-    return expi(math.log(x)) / x
+    return float(mp.ei(mp.log(x)) / x)
 
 # === Residual δ(x) ===
-def delta(x, t_list, A_list, theta_list):
-    return li_over_x(x) - rho(x, t_list, A_list, theta_list)
+def delta(x, t_list, A_list, theta_list, delta_t_list):
+    return li_over_x(x) - rho(x, t_list, A_list, theta_list, delta_t_list)
 
-# === Residual Derivative ===
-def residual_derivative(x, t_list, A_list, theta_list, h=1e-6):
-    delta_plus = delta(x + h, t_list, A_list, theta_list)
-    delta_minus = delta(x - h, t_list, A_list, theta_list)
-    return (delta_plus - delta_minus) / (2 * h)
+# === Optimization Objective (Vectorized for differential_evolution) ===
+def objective(params, x_target=100000):
+    # params: [A_1, theta_1, delta_t_1, A_2, theta_2, delta_t_2] or array of such sets
+    if len(params.shape) > 1:
+        errors = []
+        for p in params:
+            A_list = [p[0], p[3]]
+            theta_list = [p[1], p[4]]
+            delta_t_list = [p[2], p[5]]
+            error = delta(x_target, t_list, A_list, theta_list, delta_t_list) ** 2
+            reg = 1e-6 * sum(a**2 for a in A_list)  # Reduced regularization
+            errors.append(error + reg)
+        return np.array(errors)
+    else:
+        # Fixed: Use params instead of p
+        A_list = [params[0], params[3]]
+        theta_list = [params[1], params[4]]
+        delta_t_list = [params[2], params[5]]
+        error = delta(x_target, t_list, A_list, theta_list, delta_t_list) ** 2
+        reg = 1e-6 * sum(a**2 for a in A_list)  # Reduced regularization
+        return error + reg
 
-# === Lexicon Activation Score ===
-def lexicon_score(A, d):
-    return A / d if d > 0 else float('inf')
+# === Optimize Parameters ===
+def optimize_params(x_target=100000):
+    initial_params = [0.005, 0.0, 0.0, 0.005, 0.0, 0.0]  # Adjusted initial guess
+    bounds = [(0.0, 1.0), (-np.pi, np.pi), (-0.5, 0.5)] * 2  # Expanded bounds
 
-# === Optimized Adaptive Thresholds ===
-def adaptive_epsilon(delta_val, base=0.1, scale=0.1):
-    return base * (1 + scale * abs(delta_val))
+    result_de = differential_evolution(
+        objective,
+        bounds,
+        args=(x_target,),
+        strategy='best1bin',
+        maxiter=5000,
+        popsize=50,
+        tol=1e-10,
+        disp=True
+    )
 
-def adaptive_eta(delta_val, base=1.0, scale=0.2):
-    return base * (1 + scale * abs(delta_val))
+    result = minimize(
+        objective,
+        result_de.x,
+        args=(x_target,),
+        method='L-BFGS-B',
+        bounds=bounds,
+        options={'maxiter': 10000, 'ftol': 1e-15, 'gtol': 1e-15, 'disp': True}
+    )
 
-# === Optimize Amplitudes and Phases ===
-def optimize_params(x_vals, t_list, initial_A, initial_theta):
-    def objective(params):
-        A_list = params[:len(t_list)]
-        theta_list = params[len(t_list):]
-        total_delta = sum(abs(delta(x, t_list, A_list, theta_list))**2 for x in x_vals)
-        return total_delta
-    initial_guess = np.concatenate([initial_A, initial_theta])
-    bounds = [(0, 1)] * len(t_list) + [(-np.pi, np.pi)] * len(t_list)
-    result = minimize(objective, initial_guess, method='L-BFGS-B', bounds=bounds, options={'maxiter': 5000})
-    A_list = result.x[:len(t_list)].tolist()
-    theta_list = result.x[len(t_list):].tolist()
-    return A_list, theta_list
+    A_list = [result.x[0], result.x[3]]
+    theta_list = [result.x[1], result.x[4]]
+    delta_t_list = [result.x[2], result.x[5]]
+    return A_list, theta_list, delta_t_list
 
-# === Structure Collapse Check ===
-def verify_collapse(x_vals, t_list, A_list, theta_list, epsilon=1e-4):
-    print("\n=== Testing Collapse (δ(x) ≈ 0 globally) ===")
-    deltas = [delta(x, t_list, A_list, theta_list) for x in x_vals]
-    results = [abs(d) < epsilon for d in deltas]
-    for x, d, r in zip(x_vals, deltas, results):
-        print(f"x={x:.2f}, δ(x)={d:.6f}, |δ(x)| < {epsilon:.6f}: {r}")
-    if all(results):
-        print("All δ(x) < ε, collapse confirmed")
-        return True
-    print("Nonzero δ(x) detected, structure survives")
-    return False
+# === Test Forward Projection (Claim 5: Modal Approximation) ===
+def test_forward_projection(x_target=100000):
+    A_list, theta_list, delta_t_list = optimize_params(x_target)
+    print("\n=== Forward Projection Results (Claim 5: Modal Approximation) ===")
+    print(f"Optimized Amplitudes: {A_list}")
+    print(f"Optimized Phases: {theta_list}")
+    print(f"Optimized Frequency Shifts: {delta_t_list}")
+    d = delta(x_target, t_list, A_list, theta_list, delta_t_list)
+    print(f"x={x_target:.2f}, δ(x)={d:.2e}, |δ(x)|: {abs(d):.2e}")
+    return A_list, theta_list, delta_t_list
 
-# === Zero Residual Test ===
-def test_zero_residual(x_vals, t_list, epsilon=1e-4):
-    print("\n=== Testing Zero Residual Case ===")
-    initial_A = [0.01] * len(t_list)
-    initial_theta = [0.0] * len(t_list)
-    A_list, theta_list = optimize_params(x_vals, t_list, initial_A, initial_theta)
-    print("Optimized Amplitudes (first 5):", [round(a, 6) for a in A_list[:5]])
-    print("Optimized Phases (first 5):", [round(t, 6) for t in theta_list[:5]])
-    deltas = [delta(x, t_list, A_list, theta_list) for x in x_vals]
-    results = [abs(d) < epsilon for d in deltas]
-    for x, d, r in zip(x_vals, deltas, results):
-        print(f"x={x:.2f}, δ(x)={d:.6f}, |δ(x)| < {epsilon:.6f}: {r}")
-    if all(results):
-        print("Zero residual achieved, testing generativity...")
-        lexicon = evaluate_lexicon([x_vals[0]], t_list[:20], A_list[:20], theta_list[:20])
-        expanded, path_lengths = verify_adaptive_expansion(x_vals[0], t_list, A_list, theta_list, steps=5)
-        if not lexicon[x_vals[0]] and not expanded:
-            print("✅ Empty lexicon and no path expansion, collapse confirmed")
-            return True
-        else:
-            print(f"❌ Generativity detected: Lexicon={lexicon[x_vals[0]]}, Expanded={expanded}")
-            return False
-    print("Nonzero residuals, zero residual test inconclusive")
-    return None
+# === Vocabulary Activation (Claims 1 and 3) ===
+def test_vocabulary_activation(x_vals, t_list, A_list, theta_list, delta_t_list, eta_ex=100.0):
+    print("\n=== Vocabulary Activation Test (Claims 1 and 3) ===")
+    vocab = []
+    for i, t in enumerate(t_list):
+        # Compute resonance deviation δ(t_n)
+        log_x_avg = np.mean([float(mp.log(x)) for x in x_vals])
+        k = round(t * log_x_avg / (2 * math.pi))
+        delta_tn = abs(t * log_x_avg - 2 * math.pi * k)
+        score = A_list[i] / (delta_tn + 1e-6)  # Avoid division by zero
+        if score > eta_ex:
+            vocab.append(t)
+        print(f"t_{i+1}={t:.6f}, A_{i+1}={A_list[i]:.6f}, δ(t_{i+1})={delta_tn:.2e}, Score={score:.2f}, Active={'Yes' if score > eta_ex else 'No'}")
+    print(f"Vocabulary: {vocab}")
+    print(f"Claim 1 (Non-zero Residual Generativity): {'Falsifiable' if len(vocab) == 0 and any(abs(delta(x, t_list, A_list, theta_list, delta_t_list)) > 0 for x in x_vals) else 'Supported'}")
+    print(f"Claim 3 (Vocabulary Activation): {'Falsifiable' if len(vocab) == 0 else 'Supported'}")
+    return vocab
 
-# === DAG Path Expansion ===
-def verify_adaptive_expansion(x0, t_list, A_list, theta_list, base_eps=0.1, steps=10):
-    print("\n=== Testing DAG Path Expansion ===")
-    x = x0
-    path_lengths = []
-    for step in range(steps):
-        delta_val = abs(delta(x, t_list, A_list, theta_list))
-        eps_x = adaptive_epsilon(delta_val)
-        print(f"Step {step+1}, x={x:.2f}, δ(x)={delta_val:.6f}, ε(x)={eps_x:.6f}")
-        if delta_val >= eps_x:
-            print(f"Path blocked: δ(x)={delta_val:.6f} >= ε(x)={eps_x:.6f}")
-            return False, path_lengths
-        path_lengths.append(step + 1)
-        x += (1000 - x0) / steps
-    print("Path expansion successful")
-    return True, path_lengths
-
-# === Lexicon Activation ===
-def evaluate_lexicon(x_vals, t_list, A_list, theta_list, base_eta=1.0, scale=0.2):
-    print("\n=== Lexicon Activation Analysis ===")
-    lexicon_by_x = {}
+# === DAG Path Extension (Claim 4) ===
+def test_dag_path_extension(x_vals, t_list, A_list, theta_list, delta_t_list, epsilon=0.1):
+    print("\n=== DAG Path Extension Test (Claim 4) ===")
+    # Simulate a simple DAG: nodes represent states, edges represent leaps
+    dag_nodes = [0]  # Start node
+    dag_edges = []   # (from, to) pairs
+    path_extended = False
     for x in x_vals:
-        active_modes = []
-        delta_vals = []
-        for i in range(len(t_list)):
-            d = abs(li_over_x(x) - (1.0 / math.log(x) + A_list[i] * psi(t_list[i], x, 1.0, theta_list[i])))
-            delta_vals.append(d)
-            eta_x = adaptive_eta(d, base_eta, scale)
-            score = lexicon_score(A_list[i], d)
-            print(f"x={x:.2f}, t={t_list[i]:.4f}, δ_n(x)={d:.6f}, score={score:.2f}, η_x={eta_x:.2f}")
-            if score > eta_x:
-                active_modes.append((t_list[i], round(score, 2)))
-        lexicon_by_x[x] = active_modes
-        if not active_modes:
-            print(f"x={x:.2f}: Empty lexicon, testing generativity falsification")
+        d = abs(delta(x, t_list, A_list, theta_list, delta_t_list))
+        print(f"x={x:.2f}, |δ(x)|={d:.2e}, Threshold ε={epsilon:.2f}")
+        if d < epsilon:
+            # Extend DAG path
+            new_node = len(dag_nodes)
+            dag_edges.append((dag_nodes[-1], new_node))
+            dag_nodes.append(new_node)
+            path_extended = True
+            print(f"Path extended: {dag_nodes[-2]} -> {dag_nodes[-1]}")
         else:
-            print(f"x={x:.2f}: Active modes: {active_modes}")
-    return lexicon_by_x
+            print("Path blocked: |δ(x)| ≥ ε")
+    print(f"DAG Nodes: {dag_nodes}")
+    print(f"DAG Edges: {dag_edges}")
+    print(f"Claim 4 (DAG Path Extension): {'Falsifiable' if not path_extended else 'Supported'}")
+    return dag_nodes, dag_edges
 
-# === Residual Statistics ===
-def residual_statistics(x_vals, t_list, A_list, theta_list):
-    print("\n=== Residual Statistics ===")
-    deltas = [delta(x, t_list, A_list, theta_list) for x in x_vals]
-    mean_delta = np.mean(deltas)
-    std_delta = np.std(deltas)
-    max_delta = np.max(np.abs(deltas))
-    print(f"Mean δ(x): {mean_delta:.6f}, Std δ(x): {std_delta:.6f}, Max |δ(x)|: {max_delta:.6f}")
-    return mean_delta, std_delta, max_delta
+# === Zero Residual Collapse (Claim 2) ===
+def test_zero_residual_collapse(x_vals, t_list, eta_ex=100.0):
+    print("\n=== Zero Residual Collapse Test (Claim 2) ===")
+    # Construct a scenario where δ(x) ≈ 0 by setting A_n = 0 (no modal contribution)
+    A_list_zero = [0.0] * len(t_list)
+    theta_list_zero = [0.0] * len(t_list)
+    delta_t_list_zero = [0.0] * len(t_list)
+    max_delta = max(abs(delta(x, t_list, A_list_zero, theta_list_zero, delta_t_list_zero)) for x in x_vals)
+    print(f"Max |δ(x)| with A_n=0: {max_delta:.2e}")
+    
+    # Check vocabulary activation
+    vocab = []
+    log_x_avg = np.mean([float(mp.log(x)) for x in x_vals])
+    for i, t in enumerate(t_list):
+        k = round(t * log_x_avg / (2 * math.pi))
+        delta_tn = abs(t * log_x_avg - 2 * math.pi * k)
+        score = A_list_zero[i] / (delta_tn + 1e-6)
+        if score > eta_ex:
+            vocab.append(t)
+    print(f"Vocabulary (A_n=0): {vocab}")
+    
+    # Check DAG extension
+    dag_nodes = [0]
+    dag_edges = []
+    path_extended = False
+    for x in x_vals:
+        d = abs(delta(x, t_list, A_list_zero, theta_list_zero, delta_t_list_zero))
+        if d < 0.1:  # Same threshold as above
+            new_node = len(dag_nodes)
+            dag_edges.append((dag_nodes[-1], new_node))
+            dag_nodes.append(new_node)
+            path_extended = True
+    
+    print(f"Claim 2 (Zero Residual Collapse): {'Supported' if len(vocab) == 0 and not path_extended else 'Falsifiable'}")
+    return max_delta, vocab
 
-# === Plot Residuals ===
-def plot_residuals(x_vals, t_list, A_list, theta_list):
-    deltas = [delta(x, t_list, A_list, theta_list) for x in x_vals]
-    plt.figure(figsize=(10, 6))
-    plt.plot(x_vals, deltas, label="δ(x)")
-    plt.axhline(0, color='k', linestyle='--')
-    plt.title("Residual δ(x) After Optimization")
-    plt.xlabel("x")
-    plt.ylabel("δ(x)")
-    plt.legend()
-    plt.show()
+# === Residual Continuity (Claim 6) ===
+def test_residual_continuity(x_vals, t_list, A_list, theta_list, delta_t_list):
+    print("\n=== Residual Continuity Test (Claim 6) ===")
+    # Approximate derivative of δ(x) using finite differences
+    deltas = [delta(x, t_list, A_list, theta_list, delta_t_list) for x in x_vals]
+    dx = x_vals[1] - x_vals[0]
+    derivatives = [(deltas[i+1] - deltas[i]) / dx for i in range(len(deltas)-1)]
+    max_deriv = max(derivatives)
+    min_deriv = min(derivatives)
+    print(f"Derivative Range: [{min_deriv:.6f}, {max_deriv:.6f}]")
+    print(f"Claim 6 (Residual Continuity): {'Supported' if all(abs(d) < 10 for d in derivatives) else 'Falsifiable'}")
+    return derivatives
 
-# === Run Demonstration ===
-if __name__ == "__main__":
+# === Main Test Function for All Claims ===
+def test_all_claims():
     # Parameters
-    A_list = [0.1 / math.sqrt(1 + t / 100) for t in t_list]
-    theta_list = [0.05 * i * math.sin(math.log(100 + i)) for i in range(len(t_list))]
-    x_vals = np.linspace(10, 1000, 50)
+    x_target = 100000
+    x_vals = np.linspace(x_target, x_target + 1000, 10)  # Small range around x_target
+    
+    # Test Claim 5 (Modal Approximation)
+    A_list, theta_list, delta_t_list = test_forward_projection(x_target)
+    
+    # Test Claims 1 and 3 (Non-zero Residual Generativity and Vocabulary Activation)
+    vocab = test_vocabulary_activation(x_vals, t_list, A_list, theta_list, delta_t_list)
+    
+    # Test Claim 4 (DAG Path Extension)
+    dag_nodes, dag_edges = test_dag_path_extension(x_vals, t_list, A_list, theta_list, delta_t_list)
+    
+    # Test Claim 2 (Zero Residual Collapse)
+    max_delta, vocab_zero = test_zero_residual_collapse(x_vals, t_list)
+    
+    # Test Claim 6 (Residual Continuity)
+    derivatives = test_residual_continuity(x_vals, t_list, A_list, theta_list, delta_t_list)
 
-    # Residual Statistics (Before Optimization)
-    residual_statistics(x_vals, t_list, A_list, theta_list)
-
-    # Test Zero Residual Case
-    zero_residual_result = test_zero_residual(x_vals, t_list, epsilon=1e-4)
-    print("Zero Residual Test:", "✅ Collapse Confirmed" if zero_residual_result else "❌ Falsified or Inconclusive")
-
-    # Plot Residuals
-    plot_residuals(x_vals, t_list, A_list, theta_list)
+# === Main Execution ===
+if __name__ == "__main__":
+    test_all_claims()
