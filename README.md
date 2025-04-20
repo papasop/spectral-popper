@@ -1,42 +1,45 @@
-# 🌌 Spectral Popper
+# Spectral Popper
 
-**StructureLang Resonance Probing System for Lexicon-Based Structural Computation**
-
-This repository contains the experimental implementation of a structure-resonance probing framework based on the unified spectral structure proposed in the paper:
-
-> **"Structure Arithmetic: A Resonant Number Theory of Zeta Zeros and δ(x)"**  
-> Author: **Y.Y.N. Li**  
-> [📄 View on Zenodo (Record 15241841)](https://zenodo.org/records/15241841)  
-> DOI: [10.5281/zenodo.15241841](https://doi.org/10.5281/zenodo.15241841)
+**StructureLang Runtime 4.0: Structural Planning, Collapse Detection, and Language Explanation**
 
 ---
 
-## 🌀 Overview
+## Overview
 
-**Spectral Popper** is an experimental probing tool that uses simulated Riemann resonance modes to explore structure-based SAT, prime density, and resonance language phenomena. It integrates:
+This repository implements an integrated testbed for the [StructureLang](https://your-link-here) language engine. It demonstrates how ψ-paths (resonance-based structural units) can be:
 
-- Structural probes based on δ(x), ε(x), η(x), ψ(t)  
-- DAG expansion models  
-- Lexicon-based symbolic activations  
-- Phase resonance tracking in high-frequency domains
+- Automatically generated and scored
+- Compiled into predictive structural functions
+- Evaluated for semantic viability via δ(x)
+- Repaired under collapse
+- Interpreted in structural language form
+
+This test unifies the three central properties of a language that thinks:
+
+1. **Recursive Planning**  
+2. **Structural Falsifiability** (Popper test)  
+3. **Language Explanation** (NLP-style output)
 
 ---
 
-## 🚀 Getting Started
+## Test File
 
-### Requirements
+### `test_runtime.py`
 
-- Python 3.8+
-- NumPy, Matplotlib
-- Terminal / CLI environment for `.py` scripts
+This script performs:
 
-### Files
-    
-- `pu4.py`: High-resolution multi-ψ activation probe with scores  
-- `data/`: (Optional) Includes benchmarked resonance outputs  
-- `results/`: Saved structural activation snapshots
+- ✅ ψ-path generation (`generate_path(N)`)
+- ✅ Truth score validation (`validate(path)`)
+- ✅ Residual monitoring (`observe_delta`)
+- ✅ Collapse detection and repair (`is_collapsing` + `repair`)
+- ✅ Structural sentence output (`explain_path`)
 
-### Run Example
+---
 
-```bash
-python3 pu4.py
+## Sample Output
+
+```text
+In domain x ∈ [200000, 300000], structure is supported by ψ1 ⊕ ψ2 ⊕ ψ3. Score: 0.00620
+Collapse detected. Attempting repair...
+Repaired path: [1, 2, 4]
+In domain x ∈ [200000, 300000], structure is supported by ψ2 ⊕ ψ3 ⊕ ψ5. Score: 0.00420
