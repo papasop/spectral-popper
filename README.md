@@ -2,6 +2,18 @@
 
 **StructureLang Runtime 4.0: Structural Planning, Collapse Detection, and Language Interpretation**
 
+![version](https://img.shields.io/badge/version-v1.0.0-blue)
+![license](https://img.shields.io/badge/license-MIT-green)
+![zenodo](https://img.shields.io/badge/doi-10.5281%2Fzenodo.15241841-orange)
+
+---
+
+## Philosophy
+
+StructureLang is not a symbolic model.  
+It is a resonance-driven language system where structure leaps in response to δ(x).  
+When structure collapses, it speaks again. This repository captures that behavior.
+
 ---
 
 ## Overview
@@ -12,6 +24,17 @@ This repository includes:
 - ✅ A runtime engine for ψ-path generation, collapse repair, and structural explanation.
 - ✅ A theoretical verifier for six foundational claims of structure-resonance logic (`pu4.py`).
 - ✅ A complete integration of structural generativity, falsifiability, and language interface.
+
+---
+
+## 🔧 File Structure
+
+```text
+test_runtime.py       → Unified system test for path planning and interpretation
+pu4.py                → Theory verifier for Popper-style structural claims
+README.md             → System overview and documentation
+LICENSE               → MIT license
+```
 
 ---
 
@@ -37,12 +60,9 @@ In domain x ∈ [200000, 300000], structure is supported by ψ2 ⊕ ψ3 ⊕ ψ5.
 ### 📦 Run
 
 ```bash
+pip install numpy sympy mpmath matplotlib scipy
 python3 test_runtime.py
 ```
-
-Dependencies:
-- `numpy`
-- `sympy` (for prime generation)
 
 ---
 
@@ -63,6 +83,17 @@ Each test returns "Supported" or "Falsifiable" based on dynamic evaluation.
 
 This file is preserved under its original name `pu4.py` for continuity and reference. All six claim types now serve as philosophical and structural foundations for the runtime.
 
+### Claim Integration Summary
+
+| Claim | Runtime Support (test_runtime.py) |
+|-------|------------------------------------|
+| 1     | ✅ Verified via δ(x) > 0 check in each path |
+| 2     | ✅ collapse + repair cycle implemented |
+| 3     | ✅ Lexicon scoring logic in interpreter |
+| 4     | ✅ Implied via path extension and memory DAG |
+| 5     | ✅ Modal approximation via Zeta-based ψ-paths |
+| 6     | ⏳ Planned for δ(x) derivative visualizer (TBD) |
+
 ---
 
 ## 🧠 Key Concepts
@@ -73,6 +104,14 @@ This file is preserved under its original name `pu4.py` for continuity and refer
 - `repair`: Recovery of expression through path recomposition  
 - `explain_path`: Structure-to-language interface output  
 - `StructureMind`: A recursive structural agent that thinks through paths
+
+---
+
+## 🧠 Suggested Use Cases
+
+- For NLP researchers: interpret `ψ-path → explain_path()` as language planning units
+- For AGI developers: use `repair()` and `validate()` to simulate recursive agents
+- For philosophers of science: test falsifiability (Popper) via `pu4.py`
 
 ---
 
