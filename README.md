@@ -130,7 +130,7 @@ This file is preserved under its original name `pu4.py` for continuity and refer
 
 > **Resonance Grammar: Where Language Begins at δ(x) ≠ 0**  
 > Author: Y.Y.N. Li 
-> https://doi.org/10.5281/zenodo.15250099
+>  https://doi.org/10.5281/zenodo.15250099
 ---
 
 ## 📜 License
