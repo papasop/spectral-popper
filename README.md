@@ -125,12 +125,12 @@ This file is preserved under its original name `pu4.py` for continuity and refer
 ## 📄 Citation
 
 > **Structure Arithmetic: A Resonant Number Theory of Zeta Zeros and δ(x)**  
-> Author: Y.Y.N. Li  
+> Author: Y.Y.N. Li
 > https://doi.org/10.5281/zenodo.15250098
 
 > **Resonance Grammar: Where Language Begins at δ(x) ≠ 0**  
-> Author: Y.Y.N. Li 
->  https://doi.org/10.5281/zenodo.15250099
+> Author: Y.Y.N. Li
+> https://doi.org/10.5281/zenodo.15250099
 ---
 
 ## 📜 License
