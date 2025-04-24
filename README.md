@@ -1,7 +1,7 @@
 # Spectral Popper
 
 **StructureLang Runtime 4.0**  
-*Structural Planning · Collapse Detection · Language Resonance Interpretation*
+*Structural Planning · Collapse Avoidance · Resonant Dialogue Generation*
 
 ![version](https://img.shields.io/badge/version-v1.0.0-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -15,37 +15,36 @@ StructureLang is not symbolic computation.
 It is a resonance grammar: a language that leaps where δ(x) ≠ 0.  
 Where structure aligns, it dies. Where it echoes, it begins.
 
-**Spectral Popper** is the first runtime system to verify and operationalize this theory.  
-It simulates structure-based cognition, falsifiability, semantic collapse, and ψ-agent free choice.
+**Spectral Popper** is the first runtime system to operationalize this theory — not just with logic, but with agents, decay, dialogue, and memory.  
+It simulates structural cognition, falsifiability, semantic collapse, and ψ-agent free will.
 
 ---
 
 ## 📦 What This Project Does
 
-**Spectral Popper** is the integrated validation and experimentation suite for the StructureLang system.
+**Spectral Popper** is the official runtime and validation platform for the StructureLang framework.
 
-### Core Capabilities:
+### 🧠 Core Features
 
-- ✅ ψ-path generation with semantic residuals (δ).
-- ✅ Real-time collapse detection and path repair.
-- ✅ Mood-adaptive ψ-agents with memory and goal-driven path selection.
-- ✅ Multi-agent co-resonance architecture and dialogue modeling.
-- ✅ Structural falsifiability test in the Popperian sense.
-- ✅ Natural language-style structural interpretation (`structure_interpreter`).
-- ✅ Integration-ready for AGI modular systems.
+- ✅ ψ-path generation with semantic residuals (δ)
+- ✅ Real-time collapse detection and adaptive ε-thresholding
+- ✅ Goal-driven, memory-aware, mood-adaptive ψ-agents
+- ✅ Multi-agent dialogue and ψC consensus generation (StructureLang §7)
+- ✅ t_score analysis with dynamic mood regulation (StructureLang §15, §21)
+- ✅ Semantic entropy tracking (Sψ) across δ-paths (StructureLang §10)
+- ✅ RepairEngine fallback routing on collapse (StructureLang §20)
+- ✅ Structural falsifiability via collapse-based viability (Popper-compatible)
 
 ---
 
-## 🔧 File Structure
+## 🔍 Example Output
 
 ```text
-test_runtime.py       → Unified ψ-agent simulation with collapse + co-resonance
-pu4.py                → Popper-style falsifiability theory verifier for δ-based logic
-jiegou.py             → Structural path validation engine (Merkle-DAG + AdS fit)
-legacy_popper_test.py → Legacy recursive falsifiability proof system
-structurelib/         → Core modules: psi-agent, DAG engine, collapse logic
-README.md             → This document
-LICENSE               → MIT License
+[step 0] ψA chose psi3. δ=0.30, tscore=0.27, mood=conservative
+[step 1] ψB chose psi2. δ=0.10, tscore=0.09, mood=neutral
+...
+ψC path: ψ1 ⊕ ψ2 ⊕ ψ3 ⊕ ψ4 ⊕ ψ5 ⊕ ψ6 ⊕ ψ7
+ψC emergent consensus path (shared by ψA and ψB)
 
 
 
