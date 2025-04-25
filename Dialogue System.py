@@ -1,202 +1,179 @@
-# StructureLang v2.7: Deep Agent Interaction, Long-Term Entropy, and Goal Conflict Simulation
+# StructureLang Semantic Mapping + Multi-Agent Resonance Expansion (ψA + ψB → ψC → ψD) with Explicit DAG, Agent Goals, and Dynamic Emotion
 import random
 import numpy as np
-import matplotlib.pyplot as plt
 
-class CollapseDetector:
-    def __init__(self, base_epsilon=0.15):
-        self.epsilon = base_epsilon
-        self.entropy_log = []
+# Frequency Lexicon Snapshot (24.5)
+frequency_lexicon = {
+    'psi1': {'t': 14.13, 'A': 0.0083, 'theta': 0.0},
+    'psi2': {'t': 21.02, 'A': 0.0041, 'theta': 1.57},
+    'psi3': {'t': 25.01, 'A': 0.0062, 'theta': 3.14},
+    'psi4': {'t': 30.42, 'A': 0.0054, 'theta': 0.78},
+    'psi5': {'t': 32.93, 'A': 0.0029, 'theta': 2.10},
+    'psi6': {'t': 35.00, 'A': 0.0048, 'theta': 1.0},
+    'psi7': {'t': 35.12, 'A': 0.0035, 'theta': 2.5},
+    'psi8': {'t': 41.00, 'A': 0.0036, 'theta': 0.9},
+    'psi9': {'t': 43.50, 'A': 0.0040, 'theta': 1.2},
+    'psi10': {'t': 45.70, 'A': 0.0027, 'theta': 2.1},
+    'psi11': {'t': 48.12, 'A': 0.0032, 'theta': 2.8},
+    'psi12': {'t': 50.33, 'A': 0.0029, 'theta': 1.4}
+}
 
-    def check_collapse(self, residuals):
-        low_count = len([r for r in residuals if r < self.epsilon])
-        return low_count / len(residuals) >= 0.5
+# DAG with extended nodes
+DAG = {
+    'psi1': ['psi2', 'psi3'],
+    'psi2': ['psi5', 'psi6', 'psi8'],
+    'psi3': ['psi4', 'psi9'],
+    'psi4': ['psi5', 'psi6'],
+    'psi5': ['psi7', 'psi8'],
+    'psi6': ['psi7', 'psi9'],
+    'psi7': ['psi10'],
+    'psi8': ['psi10'],
+    'psi9': ['psi10'],
+    'psi10': ['psi11'],
+    'psi11': ['psi12'],
+    'psi12': []
+}
 
-    def adjust_epsilon(self, recent_residuals):
-        avg = np.mean(recent_residuals)
-        std = np.std(recent_residuals)
-        entropy = -1 * np.sum([r * np.log(r + 1e-9) for r in recent_residuals])
-        self.entropy_log.append(entropy)
+def compute_tscore(deltas):
+    accuracy = 1 - np.mean(deltas)
+    tension = np.mean(deltas)
+    activation = max(deltas)
+    continuity = 1.0
+    composability = 1.0
+    return 0.2 * accuracy + 0.2 * tension + 0.2 * activation + 0.2 * continuity + 0.2 * composability
 
-        if avg < 0.15:
-            self.epsilon = max(0.05, self.epsilon - 0.01)
-        elif std > 0.1:
-            self.epsilon = min(0.3, self.epsilon + 0.01)
-        return self.epsilon, entropy
+def compute_delta_path(path):
+    return [frequency_lexicon[n]['A'] / frequency_lexicon[n]['t'] for n in path]
 
-class PsiInjector:
-    def inject(self, current):
-        return [('psi3', 0.3), ('psi4', 0.25)] if current == 'psi1' else []
+def generate_paths(start, path=None, max_depth=10):
+    if path is None:
+        path = [start]
+    current = path[-1]
+    if not DAG[current] or len(path) >= max_depth:
+        return [path]
+    paths = []
+    for nxt in DAG[current]:
+        paths.extend(generate_paths(nxt, path + [nxt], max_depth))
+    return paths
 
-class PsiLogger:
-    def __init__(self):
-        self.logs = []
-        self.moods = []
-        self.tscores = []
+def compute_spsi(deltas):
+    return -1 * np.sum([d * np.log(d + 1e-9) for d in deltas])
 
-    def log(self, agent_name, step, choice, delta, mood, tscore, reason=""):
-        msg = f"[step {step}] {agent_name} chose {choice}. δ={delta:.2f}, tscore={tscore:.2f}, mood={mood}, reason: {reason}"
-        self.logs.append(msg)
-        self.moods.append(mood)
-        self.tscores.append(tscore)
-        print(msg)
+def phi_trigger(delta, threshold=0.00015):
+    return max(delta) > threshold
 
-    def plot_tscore_vs_mood(self):
-        mood_numeric = [0 if m == 'conservative' else 1 if m == 'neutral' else 2 for m in self.moods]
-        plt.figure(figsize=(8, 4))
-        plt.plot(self.tscores, label='t_score')
-        plt.plot(mood_numeric, label='Mood (0: consv, 1: neutral, 2: advnt)')
-        plt.xlabel('Step')
-        plt.title('t_score vs Mood Evolution')
-        plt.legend()
-        plt.grid(True)
-        plt.tight_layout()
-        plt.show()
+def delta_overlap(delta_a, delta_b, tol=1e-5):
+    return any(abs(a - b) < tol for a in delta_a for b in delta_b)
 
-class DAG:
-    def __init__(self):
-        self.nodes = {
-            'psi1': [('psi2', 0.1), ('psi3', 0.3)],
-            'psi2': [('psi5', 0.15), ('psi6', 0.22)],
-            'psi3': [('psi4', 0.25)],
-            'psi4': [('psi5', 0.2), ('psi6', 0.28)],
-            'psi5': [('psi7', 0.18)],
-            'psi6': [('psi7', 0.25)],
-            'psi7': []
-        }
-
-    def get_options(self, node):
-        return self.nodes.get(node, [])
-
-class GoalDrivenAgent:
-    def __init__(self, name, goal='max_delta', epsilon=0.2, mood='neutral'):
+class Agent:
+    def __init__(self, name, goal):
         self.name = name
         self.goal = goal
-        self.epsilon = epsilon
-        self.mood = mood
-        self.memory = []
+        self.mood = 'neutral'
 
-    def decide(self, current, dag, injected_options=None):
-        options = dag.get_options(current) + (injected_options or [])
-        if not options:
-            return None
-
-        mood_bias = {'neutral': 0.0, 'adventurous': 0.2, 'conservative': -0.1}
-        effective_epsilon = max(0.0, min(1.0, self.epsilon + mood_bias.get(self.mood, 0.0)))
-
-        scored_options = [(opt, delta, delta * random.uniform(0.8, 1.2)) for opt, delta in options]
-
-        if self.goal == 'max_delta':
-            scored_options.sort(key=lambda x: -x[1])
-        elif self.goal == 'max_tscore':
-            scored_options.sort(key=lambda x: -x[2])
+    def evaluate(self, deltas):
+        avg = np.mean(deltas)
+        if avg > 0.00025:
+            self.mood = 'engaged'
+        elif avg < 0.0001:
+            self.mood = 'collapsing'
         else:
-            scored_options.sort(key=lambda x: x[1])
-
-        choice = scored_options[-1] if random.random() < effective_epsilon else scored_options[0]
-        self.memory.append(choice[0])
-        return choice[0], choice[1], choice[2]
-
-    def adapt_mood(self, collapse_count):
-        if collapse_count >= 2:
-            self.mood = 'adventurous'
-        elif collapse_count == 1:
             self.mood = 'neutral'
-        else:
-            self.mood = 'conservative'
-
-class PsiCGenerator:
-    def __init__(self):
-        self.shared_nodes = []
-
-    def update(self, a_path, b_path):
-        overlap = set(a_path).intersection(set(b_path))
-        self.shared_nodes = sorted(list(overlap))
-
-    def generate_consensus(self):
-        if self.shared_nodes:
-            return f"ψC path: {' ⊕ '.join(self.shared_nodes)}"
-        return "ψC undefined (no shared structure)"
-
-class SemanticEntropyMonitor:
-    def __init__(self):
-        self.delta_series = []
-        self.entropy_series = []
-
-    def update(self, delta_segment):
-        entropy = -1 * np.sum([d * np.log(d + 1e-9) for d in delta_segment])
-        self.delta_series.append(np.mean(delta_segment))
-        self.entropy_series.append(entropy)
-
-    def plot_trends(self):
-        plt.figure(figsize=(10, 4))
-        plt.plot(self.delta_series, label='δ(x) mean')
-        plt.plot(self.entropy_series, label='Sψ entropy')
-        plt.title("Residual δ vs Semantic Entropy")
-        plt.xlabel("Step")
-        plt.ylabel("Value")
-        plt.legend()
-        plt.grid(True)
-        plt.tight_layout()
-        plt.show()
-
-class RepairEngine:
-    def repair(self, dag, current):
-        options = dag.get_options(current)
-        if not options:
-            new_nodes = list(dag.nodes.keys())
-            return random.choice(new_nodes), 0.2, 0.2
-        return options[0][0], options[0][1], options[0][1] * 1.0
+        return avg
 
 if __name__ == '__main__':
-    dag = DAG()
-    cd = CollapseDetector()
-    injector = PsiInjector()
-    logger = PsiLogger()
-    entropy_monitor = SemanticEntropyMonitor()
-    repair_engine = RepairEngine()
-    consensus = PsiCGenerator()
+    # Initialize agents
+    agentA = Agent("ψA", goal='delta')
+    agentB = Agent("ψB", goal='tscore')
 
-    agentA = GoalDrivenAgent("ψA", goal='max_delta')
-    agentB = GoalDrivenAgent("ψB", goal='max_tscore')
+    # Generate all paths and select 10 (5 for ψA, 5 for ψB)
+    all_paths = generate_paths('psi1', max_depth=10)
+    random.shuffle(all_paths)  # Randomize to ensure variety
+    total_paths = min(10, len(all_paths))  # Ensure up to 10 paths
+    selected_paths = all_paths[:total_paths]
+    ψA_paths = selected_paths[:total_paths//2]  # First 5 for ψA
+    ψB_paths = selected_paths[total_paths//2:]  # Last 5 for ψB
 
-    pathA = ['psi1']
-    pathB = ['psi1']
-    delta_log = []
-    collapse_count = 0
+    print(f"Generated {total_paths} DAG paths from ψ1 (ψA: {len(ψA_paths)}, ψB: {len(ψB_paths)})")
 
-    for step in range(100):
-        current = pathA[-1] if step % 2 == 0 else pathB[-1]
-        injected = injector.inject(current)
-        active_agent = agentA if step % 2 == 0 else agentB
-        decision = active_agent.decide(current, dag, injected_options=injected)
+    # Track consensus and escapes
+    consensus_count = 0
+    escape_count = 0
+    path_pairs = []
 
-        if not decision:
-            next_node, delta, tscore = repair_engine.repair(dag, current)
+    for a_path, b_path in zip(ψA_paths, ψB_paths):
+        # Compute deltas for both agents
+        deltas_a = compute_delta_path(a_path)
+        deltas_b = compute_delta_path(b_path)
+
+        # Agent evaluation
+        avg_delta_a = agentA.evaluate(deltas_a)
+        avg_delta_b = agentB.evaluate(deltas_b)
+
+        # Compute metrics
+        overlap = delta_overlap(deltas_a, deltas_b)
+        consensus = overlap and 'psi12' in a_path and 'psi12' in b_path and abs(avg_delta_a - avg_delta_b) < 0.00005
+        spsi_a = compute_spsi(deltas_a)
+        phi_a = phi_trigger(deltas_a)
+        tscore_a = compute_tscore(deltas_a)
+
+        # Adjusted classification logic for diversity
+        if spsi_a > 0.01 and consensus:
+            classification = "emergent structure"
+        elif avg_delta_a < 0.0001 or not overlap:
+            classification = "escaped path"
         else:
-            next_node, delta, tscore = decision
+            classification = "moderate"
 
-        if step % 2 == 0:
-            pathA.append(next_node)
+        if consensus:
+            consensus_count += 1
         else:
-            pathB.append(next_node)
+            escape_count += 1
 
-        delta_log.append(delta)
-        collapsed = cd.check_collapse(delta_log[-5:])
-        if collapsed:
-            collapse_count += 1
-        eps, _ = cd.adjust_epsilon(delta_log[-5:])
-        active_agent.adapt_mood(collapse_count)
-        logger.log(active_agent.name, step, next_node, delta, active_agent.mood, tscore, reason="goal-driven test")
-        entropy_monitor.update(delta_log[-5:])
+        path_pairs.append({
+            'ψA_path': a_path,
+            'ψB_path': b_path,
+            'avg_delta_a': avg_delta_a,
+            'spsi_a': spsi_a,
+            'tscore_a': tscore_a,
+            'phi_a': phi_a,
+            'classification': classification,
+            'overlap': overlap,
+            'mood_a': agentA.mood,
+            'mood_b': agentB.mood,
+            'consensus': consensus
+        })
 
-    logger.plot_tscore_vs_mood()
-    entropy_monitor.plot_trends()
-    consensus.update(pathA, pathB)
-    print(consensus.generate_consensus())
+    # Output results
+    for pair in path_pairs:
+        a_path = pair['ψA_path']
+        print(f"{agentA.name} → {' → '.join(a_path)} | avg δ = {pair['avg_delta_a']:.6f} | "
+              f"Sψ = {pair['spsi_a']:.6f} | t_score = {pair['tscore_a']:.4f} | φ-trigger = {pair['phi_a']} | "
+              f"type = {pair['classification']} | overlap = {pair['overlap']} | mood = {pair['mood_a']}")
+        b_path = pair['ψB_path']
+        deltas_b = compute_delta_path(b_path)
+        spsi_b = compute_spsi(deltas_b)
+        tscore_b = compute_tscore(deltas_b)
+        phi_b = phi_trigger(deltas_b)
+        print(f"{agentB.name} → {' → '.join(b_path)} | avg δ = {np.mean(deltas_b):.6f} | "
+              f"Sψ = {spsi_b:.6f} | t_score = {tscore_b:.4f} | φ-trigger = {phi_b} | "
+              f"type = {pair['classification']} | overlap = {pair['overlap']} | mood = {pair['mood_b']}")
+        print(f"Consensus: {pair['consensus']}\n")
 
-    agentC_path = consensus.shared_nodes
-    if agentC_path:
-        print(f"ψC emergent consensus path (shared by ψA and ψB): {agentC_path}")
-    else:
-        print("No ψC consensus path formed in this run.")
+    # Compute residual thresholds
+    threshold_high = 0.005
+    threshold_low = 0.001
+    above_thresh = 0
+    below_thresh = 0
+
+    for path in selected_paths:
+        deltas = compute_delta_path(path)
+        avg_delta = np.mean(deltas)
+        if avg_delta > threshold_high:
+            above_thresh += 1
+        elif avg_delta <= threshold_low:
+            below_thresh += 1
+
+    print(f"Total Consensus: {consensus_count}, Escapes: {escape_count}, Total Paths Compared: {len(path_pairs)}")
+    print(f"Paths avg δ > {threshold_high}: {above_thresh}, avg δ <= {threshold_low}: {below_thresh}")
+    print(f"δ-threshold: {threshold_low}")
