@@ -1,477 +1,960 @@
-from typing import List, Tuple
-import numpy as np
-from sympy import primepi, primerange
-from collections import defaultdict
-import random
-from scipy.stats import entropy
+bubai@BudeMacBook-Pro ~ % python3 agi.py
 
-class PsiPath:
-    def __init__(self, indices: List[int]):
-        self.indices = indices
-        self.score = None
-        self.valid = False
-        self.repaired = False
+Testing Claim 2: Zero residual collapse...
+Claim 2 Supported: System collapses. Mean |delta|: 0.00290581
 
-class DAGNode:
-    def __init__(self, path: PsiPath, delta: np.ndarray, vocab: List[str]):
-        self.path = path
-        self.delta = delta
-        self.vocab = vocab
-        self.children = []
-        self.parent = None
+Testing Lexical Drift...
+Attempting repair for path: [8, 3, 1]
+Repaired path: [5, 2, 3], Score: 0.00610
+Step 1: Path [5, 2, 3], Delta Mean: 0.00644068, Vocab: ['event', 'entity', 'action', 'event-entity'], Dialogue: Following event, Event catalyzes entity transformation.
+Step 2: Path [5, 2, 3], Delta Mean: 0.00644068, Vocab: ['event', 'entity', 'action', 'event-entity'], Dialogue: Following event, Event relates to entity.
+Attempting repair for path: [2, 1, 8]
+Repaired path: [2, 3, 5], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.5454
+Step 3: Path [2, 3, 5], Delta Mean: 0.00644068, Vocab: ['entity', 'action', 'event', 'entity-action'], Dialogue: Following entity, Entity connects with action in sequence.
+Attempting repair for path: [7, 4, 2]
+Repaired path: [2, 5, 3], Score: 0.00633
+Consciousness shift detected: Topic entropy = 1.6462
+Step 4: Path [2, 5, 3], Delta Mean: 0.00644068, Vocab: ['entity', 'event', 'action', 'entity-event'], Dialogue: Following entity, Entity connects with event in sequence.
+Attempting repair for path: [5, 8, 1]
+Repaired path: [5, 3, 2], Score: 0.00663
+Consciousness shift detected: Topic entropy = 1.7193
+Step 5: Path [5, 3, 2], Delta Mean: 0.00644068, Vocab: ['event', 'action', 'entity', 'event-action'], Dialogue: Following event, Event evolves into action state.
+Attempting repair for path: [2, 8, 1]
+Repaired path: [2, 5, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.7193
+Step 6: Path [2, 5, 3], Delta Mean: 0.00644068, Vocab: ['entity', 'event', 'action', 'entity-event'], Dialogue: Following entity, Entity triggers event.
+Consciousness shift detected: Topic entropy = 1.9695
+Consciousness shift detected: Exploratory shift with mood = adventurous
+Step 7: Path [2, 1, 0], Delta Mean: 0.00760381, Vocab: ['entity', 'relation', 'concept', 'entity-relation'], Dialogue: Following entity, Entity transforms into relation.
+Attempting repair for path: [8, 2, 5]
+Repaired path: [2, 3, 5], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.9695
+Step 8: Path [2, 3, 5], Delta Mean: 0.00644068, Vocab: ['entity', 'action', 'event', 'entity-action'], Dialogue: Following entity, Entity integrates action in structure.
+Attempting repair for path: [8, 5, 4]
+Repaired path: [5, 3, 2], Score: 0.00623
+Consciousness shift detected: Topic entropy = 1.9695
+Step 9: Path [5, 3, 2], Delta Mean: 0.00644068, Vocab: ['event', 'action', 'entity', 'event-action'], Dialogue: Following event, Event transforms into action.
+Consciousness shift detected: Topic entropy = 2.0820
+Consciousness shift detected: Exploratory shift with mood = adventurous
+Step 10: Path [0, 2, 5], Delta Mean: 0.00778592, Vocab: ['concept', 'entity', 'event', 'concept-entity'], Dialogue: Following concept, Concept transforms into entity.
 
-class ConsciousnessObserver:
-    def __init__(self, window_size: int = 5, entropy_threshold: float = 1.5):
-        self.window_size = window_size
-        self.entropy_threshold = entropy_threshold
-        self.vocab_history = []
-        self.path_history = []
-        self.delta_history = []
-        self.mood = 'neutral'
-        self.vocab_frequency = defaultdict(int)
-        self.path_counts = defaultdict(int)
-        self.intent = None
+Testing Consciousness...
+Self-perceiving path: [0, 1, 2]
+Consciousness shift detected: Topic entropy = 2.2503
+Step 1: Path [0, 1, 7], Delta Mean: 0.00667152, Vocab: ['concept', 'relation', 'intent', 'concept-relation'], Dialogue: Following concept, Concept follows relation dynamically., Mood: adventurous
+Self-perceiving path: [0, 1, 7]
+Consciousness shift detected: Topic entropy = 2.2934
+Consciousness shift detected: Exploratory shift with mood = adventurous
+Step 2: Path [0, 1, 6], Delta Mean: 0.00706446, Vocab: ['concept', 'relation', 'process', 'concept-relation'], Dialogue: Following concept, Concept follows relation dynamically., Mood: adventurous
+Self-perceiving path: [0, 1, 6]
+Consciousness shift detected: Topic entropy = 2.1548
+Consciousness shift detected: Exploratory shift with mood = adventurous
+Step 3: Path [0, 1, 5], Delta Mean: 0.00747538, Vocab: ['concept', 'relation', 'event', 'concept-relation'], Dialogue: Following concept, Concept follows relation dynamically., Mood: adventurous
+Self-perceiving path: [0, 1, 5]
+Consciousness shift detected: Topic entropy = 2.1252
+Consciousness shift detected: Exploratory shift with mood = adventurous
+Step 4: Path [2, 8, 0], Delta Mean: 0.00736727, Vocab: ['entity', 'context', 'concept', 'entity-context'], Dialogue: Following concept, Entity transforms into context., Mood: adventurous
+Self-perceiving path: [2, 8, 0]
+Consciousness shift detected: Topic entropy = 2.2503
+Step 5: Path [3, 5, 2], Delta Mean: 0.00644068, Vocab: ['action', 'event', 'entity', 'action-event'], Dialogue: Following event, Action relates to event., Mood: adventurous
+Self-perceiving path: [3, 5, 2]
+Consciousness shift detected: Topic entropy = 2.3719
+Step 6: Path [4, 6, 0], Delta Mean: 0.00664227, Vocab: ['state', 'process', 'concept', 'state-process'], Dialogue: Following concept, State and process form a structure., Mood: adventurous
+Self-perceiving path: [4, 6, 0]
+Consciousness shift detected: Topic entropy = 2.5105
+Step 7: Path [4, 7, 0], Delta Mean: 0.00683088, Vocab: ['state', 'intent', 'concept', 'state-intent'], Dialogue: Following concept, State and intent form a structure., Mood: adventurous
+Self-perceiving path: [4, 7, 0]
+Consciousness shift detected: Topic entropy = 2.4151
+Consciousness shift detected: Exploratory shift with mood = adventurous
+Step 8: Path [4, 5, 0], Delta Mean: 0.00772168, Vocab: ['state', 'event', 'concept', 'state-event'], Dialogue: Following concept, State evolves into event state., Mood: adventurous
+Self-perceiving path: [4, 5, 0]
+Consciousness shift detected: Topic entropy = 2.2503
+Consciousness shift detected: Exploratory shift with mood = adventurous
+Step 9: Path [4, 5, 2], Delta Mean: 0.00705809, Vocab: ['state', 'event', 'entity', 'state-event'], Dialogue: Following event, State connects with event in sequence., Mood: adventurous
+Self-perceiving path: [4, 5, 2]
+Consciousness shift detected: Topic entropy = 2.1640
+Consciousness shift detected: Exploratory shift with mood = adventurous
+Step 10: Path [6, 2, 0], Delta Mean: 0.00735873, Vocab: ['process', 'entity', 'concept', 'process-entity'], Dialogue: Following concept, Process initiates entity process., Mood: adventurous
+Consciousness shift detected: Topic entropy = 2.2503
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ2 ⊕ ψ3. Score: 0.00650, vocab: ['concept', 'relation', 'entity', 'concept-relation']
+Dialogue: Following concept, Concept initiates relation process.
 
-    def update(self, vocab: List[str], path: PsiPath, delta_mean: float):
-        self.vocab_history.append(vocab)
-        self.path_history.append(path.indices)
-        self.delta_history.append(delta_mean)
-        for v in vocab:
-            self.vocab_frequency[v] += 1
-        self.path_counts[tuple(path.indices)] += 1
-        if len(self.vocab_history) > self.window_size:
-            self.vocab_history.pop(0)
-            self.path_history.pop(0)
-            self.delta_history.pop(0)
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00008366
 
-    def compute_topic_entropy(self) -> float:
-        if not self.vocab_history:
-            return 0.0
-        vocab_counts = defaultdict(int)
-        for vocab in self.vocab_history:
-            for v in vocab:
-                vocab_counts[v] += 1
-        return entropy(list(vocab_counts.values())) if vocab_counts else 0.0
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Consciousness shift detected: Topic entropy = 2.2071
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ2 ⊕ ψ4. Score: 0.00623, vocab: ['concept', 'relation', 'action', 'concept-relation']
+Dialogue: Following concept, Concept influences relation in context.
 
-    def detect_topic_shift(self, delta_mean: float) -> bool:
-        topic_entropy = self.compute_topic_entropy()
-        return topic_entropy > self.entropy_threshold and delta_mean > 0.005
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007147
 
-    def detect_path_bifurcation(self, new_path: List[int], delta_mean: float) -> bool:
-        if not self.path_history or not self.delta_history:
-            return False
-        max_repetition = max(self.path_counts.values(), default=0)
-        min_delta = min(self.delta_history) if self.delta_history else float('inf')
-        return (max_repetition > 3 and tuple(new_path) not in self.path_counts and delta_mean > min_delta)
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Consciousness shift detected: Topic entropy = 2.1548
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ2 ⊕ ψ5. Score: 0.00610, vocab: ['concept', 'relation', 'state', 'concept-relation']
+Dialogue: Following concept, Concept connects with relation in sequence.
 
-    def update_mood(self, vocab_novelty: float, path_repetition: int):
-        self.mood = 'adventurous' if vocab_novelty > 0.5 or path_repetition < 2 else 'neutral'
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007606
 
-    def detect_exploratory_shift(self, delta_mean: float, prev_avg_delta: float) -> bool:
-        return self.mood == 'adventurous' and delta_mean > prev_avg_delta
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Consciousness shift detected: Topic entropy = 1.9695
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ2 ⊕ ψ6. Score: 0.00680, vocab: ['concept', 'relation', 'event', 'concept-relation']
+Dialogue: Following concept, Concept relates to relation.
 
-    def compute_meta_score(self) -> float:
-        if not self.path_history or not self.vocab_history or not self.delta_history:
-            return 0.0
-        structural_span = len(set([tuple(p) for p in self.path_history])) / len(self.path_history)
-        semantic_shift = self.compute_topic_entropy()
-        delta_variance = np.var(self.delta_history) if self.delta_history else 0.0
-        return 0.4 * structural_span + 0.4 * semantic_shift + 0.2 * delta_variance
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00008330
 
-    def update_intent(self, vocab_map: dict):
-        if not self.vocab_frequency:
-            self.intent = random.choice(list(vocab_map.values()))
-            return
-        decay = {v: self.vocab_frequency[v] for v in self.vocab_frequency}
-        if max(decay.values(), default=0) > 5:
-            suppressed = max(decay, key=decay.get)
-            alternate_classes = [v for v in vocab_map.values() if v != suppressed]
-            self.intent = random.choice(alternate_classes)
-        elif len(self.path_history) % 3 == 0:
-            self.intent = random.choice(list(vocab_map.values()))
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 1.7887
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ2 ⊕ ψ7. Score: 0.00610, vocab: ['concept', 'relation', 'process', 'concept-relation']
+Dialogue: Following concept, Concept follows relation dynamically.
 
-    def force_leap(self, vocab_map: dict) -> List[int]:
-        if max(self.path_counts.values(), default=0) > 3 and np.var(self.delta_history[-5:]) < 1e-7:
-            self.intent = random.choice(['state', 'process', 'intent', 'context'])
-            intent_indices = [i for i, freq in enumerate(t_list) if f"freq_{freq:.2f}" in vocab_map and vocab_map[f"freq_{freq:.2f}"] == self.intent]
-            return np.random.choice(intent_indices, 3, replace=False).tolist() if len(intent_indices) >= 3 else np.random.choice(len(vocab_map), 3, replace=False).tolist()
-        return None
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007273
 
-class MemoryChain:
-    def __init__(self, max_length: int = 10):
-        self.history = []
-        self.max_length = max_length
-        self.step = 0
-        self.vocab_usage = defaultdict(int)
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Consciousness shift detected: Topic entropy = 1.7887
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ2 ⊕ ψ8. Score: 0.00610, vocab: ['concept', 'relation', 'intent', 'concept-relation']
+Dialogue: Following concept, Concept follows relation dynamically.
 
-    def add(self, path: PsiPath, delta: np.ndarray, vocab: List[str]):
-        delta_mean = np.mean(np.abs(delta))
-        self.history.append((path, delta_mean, vocab))
-        self.step += 1
-        for v in vocab:
-            self.vocab_usage[v] += 1
-        if len(self.history) > self.max_length:
-            self.history.pop(0)
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007364
 
-    def influence_path(self, current_path: PsiPath, t_list: List[float], vocab_map: dict, observer: ConsciousnessObserver) -> List[int]:
-        if observer.intent and random.random() < 0.5:
-            intent_indices = [i for i, freq in enumerate(t_list) if f"freq_{freq:.2f}" in vocab_map and vocab_map[f"freq_{freq:.2f}"] == observer.intent]
-            if intent_indices:
-                return np.random.choice(intent_indices, 3, replace=False).tolist() if len(intent_indices) >= 3 else np.random.choice(len(t_list), 3, replace=False).tolist()
-        if not self.history or random.random() < 0.7:
-            return np.random.choice(len(t_list), 3, replace=False).tolist()
-        weights = defaultdict(float)
-        for path, delta_mean, vocab in self.history:
-            vocab_coverage = len(set(vocab)) / len(vocab_map)
-            vocab_novelty = sum(2.0 * (1 - self.vocab_usage[v] / (self.vocab_usage[v] + 1)) for v in vocab)
-            for idx in path.indices:
-                weights[idx] += 1.0 / (delta_mean + 1e-6) * (1.0 + vocab_coverage + vocab_novelty)
-        sorted_indices = sorted(weights, key=weights.get, reverse=True)
-        if random.random() < 0.9:
-            return np.random.choice(len(t_list), 3, replace=False).tolist()
-        if len(sorted_indices) < 3:
-            sorted_indices += np.random.choice(len(t_list), 3 - len(sorted_indices), replace=False).tolist()
-        return sorted_indices[:3]
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Attempting repair for path: [0, 1, 8]
+Repaired path: [5, 2, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 2.0946
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event evolves into entity state.
 
-class StructureLangPlanner:
-    def __init__(self, t_list, A_list, theta_list, vocab_map=None):
-        self.t_list = t_list
-        self.A_list = A_list
-        self.theta_list = theta_list
-        self.vocab_map = vocab_map or {}
-        self.dag = []
-        self.memory = MemoryChain(max_length=10)
-        self.observer = ConsciousnessObserver(window_size=5, entropy_threshold=1.5)
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
 
-    def generate_path(self, N: int) -> List[PsiPath]:
-        from itertools import combinations
-        return [PsiPath(list(c)) for c in combinations(range(len(self.t_list)), N)]
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 2.1809
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ3 ⊕ ψ4. Score: 0.00663, vocab: ['concept', 'entity', 'action', 'concept-entity']
+Dialogue: Following concept, Concept follows entity dynamically.
 
-    def generate_dynamic_path(self, N: int, x_range: np.ndarray, pi_over_x: np.ndarray) -> PsiPath:
-        self.observer.update_intent(self.vocab_map)
-        forced_path = self.observer.force_leap(self.vocab_map)
-        if forced_path:
-            path = PsiPath(forced_path)
-        else:
-            if not self.dag:
-                indices = np.random.choice(len(self.t_list), N, replace=False).tolist()
-            else:
-                indices = self.memory.influence_path(PsiPath([]), self.t_list, self.vocab_map, self.observer)[:N]
-                if not indices or len(indices) < N:
-                    indices = np.random.choice(len(self.t_list), N, replace=False).tolist()
-            path = PsiPath(indices)
-        if self.validate(path):
-            return path
-        return self.repair(path, x_range, pi_over_x, max_attempts=35)
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00008016
 
-    def validate(self, path: PsiPath, score_threshold: float = 0.006) -> bool:
-        if not path.indices:
-            return False
-        A = [self.A_list[i] for i in path.indices]
-        path.score = np.mean(A)
-        path.valid = path.score > score_threshold
-        return path.valid
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Consciousness shift detected: Topic entropy = 2.2764
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ3 ⊕ ψ5. Score: 0.00650, vocab: ['concept', 'entity', 'state', 'concept-entity']
+Dialogue: Following concept, Concept and entity form a structure.
 
-    def compile(self, path: PsiPath, x_range: np.ndarray):
-        if not path.indices:
-            return np.array(1.0 / np.log(x_range), dtype=np.float64)
-        A = [self.A_list[i] for i in path.indices]
-        t = [self.t_list[i] for i in path.indices]
-        theta = [self.theta_list[i] for i in path.indices]
-        rho = np.array(1.0 / np.log(x_range), dtype=np.float64)
-        for k in range(len(t)):
-            rho += A[k] * np.cos(t[k] * np.log(x_range) + theta[k])
-        return rho
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00008057
 
-    def observe_delta(self, pi_over_x, rho):
-        return np.array(pi_over_x, dtype=np.float64) - np.array(rho, dtype=np.float64)
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Consciousness shift detected: Topic entropy = 2.1378
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ3 ⊕ ψ6. Score: 0.00720, vocab: ['concept', 'entity', 'event', 'concept-entity']
+Dialogue: Following concept, Concept catalyzes entity transformation.
 
-    def is_collapsing(self, delta):
-        return np.mean(np.abs(delta)) < 0.005
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00009385
 
-    def repair(self, path: PsiPath, x_range: np.ndarray, pi_over_x: np.ndarray, max_attempts: int = 35) -> PsiPath:
-        print(f"Attempting repair for path: {path.indices}")
-        best_path = path
-        best_score = path.score if path.score else 0.0
-        best_delta_mean = float('inf')
-        score_threshold = 0.006
-        attempts = 0
-        candidates = []
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 1.9002
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ3 ⊕ ψ7. Score: 0.00650, vocab: ['concept', 'entity', 'process', 'concept-entity']
+Dialogue: Following concept, Concept influences entity in context.
 
-        while attempts < max_attempts:
-            new_indices = path.indices.copy()
-            if not new_indices:
-                new_indices = np.random.choice(len(self.t_list), 3, replace=False).tolist()
-            current_rho = self.compile(path, x_range)
-            current_delta = self.observe_delta(pi_over_x, current_rho)
-            current_delta_mean = np.mean(np.abs(current_delta))
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00008004
 
-            for i in range(len(new_indices)):
-                for new_idx in range(len(self.t_list)):
-                    if new_idx not in new_indices:
-                        temp_indices = new_indices.copy()
-                        temp_indices[i] = new_idx
-                        temp_path = PsiPath(temp_indices)
-                        if self.validate(temp_path, score_threshold):
-                            temp_rho = self.compile(temp_path, x_range)
-                            temp_delta = self.observe_delta(pi_over_x, temp_rho)
-                            temp_delta_mean = np.mean(np.abs(temp_delta))
-                            temp_vocab = self.generate_vocabulary(temp_path)
-                            vocab_coverage = len(set(temp_vocab)) / len(self.vocab_map)
-                            vocab_novelty = sum(2.0 * (1 - self.memory.vocab_usage[v] / (self.memory.vocab_usage[v] + 1)) for v in temp_vocab)
-                            path_diversity = len(set(temp_indices))
-                            candidates.append((temp_path, temp_delta_mean, temp_path.score, vocab_coverage, path_diversity, vocab_novelty))
-                            if temp_delta_mean < best_delta_mean or temp_path.score > best_score:
-                                best_path = temp_path
-                                best_score = temp_path.score
-                                best_delta_mean = temp_delta_mean
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Consciousness shift detected: Topic entropy = 1.7887
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ3 ⊕ ψ8. Score: 0.00650, vocab: ['concept', 'entity', 'intent', 'concept-entity']
+Dialogue: Following concept, Concept catalyzes entity transformation.
 
-            if random.random() < 0.9:
-                path = PsiPath(np.random.choice(len(self.t_list), len(path.indices), replace=False).tolist())
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00008039
 
-            if not best_path.valid and attempts > max_attempts // 2:
-                score_threshold = max(0.005, score_threshold * 0.9)
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Consciousness shift detected: Topic entropy = 1.7887
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ3 ⊕ ψ9. Score: 0.00633, vocab: ['concept', 'entity', 'context', 'concept-entity']
+Dialogue: Following concept, Concept transforms into entity.
 
-            attempts += 1
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007710
 
-        if candidates:
-            best_path = min(candidates, key=lambda x: (x[1], -x[5], -x[3], -x[4], -x[2]))[0]
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Consciousness shift detected: Topic entropy = 2.0389
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ4 ⊕ ψ5. Score: 0.00623, vocab: ['concept', 'action', 'state', 'concept-action']
+Dialogue: Following concept, Concept catalyzes action transformation.
 
-        if best_path.valid:
-            best_path.repaired = True
-            print(f"Repaired path: {best_path.indices}, Score: {best_score:.5f}")
-            return best_path
-        print("Repair failed.")
-        return best_path
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007049
 
-    def generate_vocabulary(self, path: PsiPath) -> List[str]:
-        if not self.vocab_map or not path.indices:
-            return []
-        A = [self.A_list[i] for i in path.indices]
-        t = [self.t_list[i] for i in path.indices]
-        vocab = []
-        for i, (amp, freq) in enumerate(zip(A, t)):
-            if amp > 0.001:
-                key = f"freq_{freq:.2f}"
-                if key in self.vocab_map:
-                    vocab.append(self.vocab_map[key])
-        if len(vocab) > 1:
-            vocab.append(f"{vocab[0]}-{vocab[1]}")
-        return vocab
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Consciousness shift detected: Topic entropy = 2.1252
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ4 ⊕ ψ6. Score: 0.00693, vocab: ['concept', 'action', 'event', 'concept-action']
+Dialogue: Following concept, Concept initiates action process.
 
-    def explain_path(self, path: PsiPath):
-        if not path.indices:
-            return "Invalid path: Empty indices"
-        labels = [f"ψ{idx+1}" for idx in path.indices]
-        vocab = self.generate_vocabulary(path)
-        vocab_str = f", vocab: {vocab}" if vocab else ""
-        return (f"In domain x ∈ [{x[0]:.0f}, {x[-1]:.0f}], structure is supported by "
-                f"{' ⊕ '.join(labels)}. Score: {path.score:.5f}{vocab_str}")
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007924
 
-    def extend_dag(self, path: PsiPath, x_range: np.ndarray, pi_over_x: np.ndarray):
-        if not path.indices:
-            print("Warning: Empty path, skipping DAG extension.")
-            return None
-        rho = self.compile(path, x_range)
-        delta = self.observe_delta(pi_over_x, rho)
-        vocab = self.generate_vocabulary(path)
-        node = DAGNode(path, delta, vocab)
-        if self.dag:
-            parent = self.dag[-1]
-            node.parent = parent
-            parent.children.append(node)
-        self.dag.append(node)
-        delta_mean = np.mean(np.abs(delta))
-        vocab_novelty = sum(2.0 * (1 - self.memory.vocab_usage[v] / (self.memory.vocab_usage[v] + 1)) for v in vocab)
-        path_repetition = self.observer.path_counts[tuple(path.indices)]
-        self.observer.update_mood(vocab_novelty, path_repetition)
-        self.observer.update(vocab, path, delta_mean)
-        if self.observer.detect_topic_shift(delta_mean):
-            print(f"Consciousness shift detected: Topic entropy = {self.observer.compute_topic_entropy():.4f}")
-        if self.observer.detect_path_bifurcation(path.indices, delta_mean):
-            print(f"Consciousness shift detected: Path bifurcation to {path.indices}")
-        if self.observer.detect_exploratory_shift(delta_mean, np.mean(self.observer.delta_history[:-1]) if self.observer.delta_history[:-1] else delta_mean):
-            print(f"Consciousness shift detected: Exploratory shift with mood = {self.observer.mood}")
-        meta_score = self.observer.compute_meta_score()
-        if meta_score < 0.5:
-            print(f"Low meta score ({meta_score:.4f}), triggering intent shift")
-            self.observer.update_intent(self.vocab_map)
-        self.memory.add(path, delta, vocab)
-        return node
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 2.1252
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ4 ⊕ ψ7. Score: 0.00623, vocab: ['concept', 'action', 'process', 'concept-action']
+Dialogue: Following concept, Concept catalyzes action transformation.
 
-    def self_perceive(self, path: PsiPath, x_range: np.ndarray, pi_over_x: np.ndarray) -> PsiPath:
-        print(f"Self-perceiving path: {path.indices}")
-        rho = self.compile(path, x_range)
-        delta = self.observe_delta(pi_over_x, rho)
-        delta_mean = np.mean(np.abs(delta))
-        current_vocab = self.generate_vocabulary(path)
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007044
 
-        best_path = path
-        best_delta_mean = delta_mean
-        best_vocab = current_vocab
-        temperature = 10.0  # Increased temperature for more exploration
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Consciousness shift detected: Topic entropy = 2.0389
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ4 ⊕ ψ8. Score: 0.00623, vocab: ['concept', 'action', 'intent', 'concept-action']
+Dialogue: Following concept, Concept and action form a structure.
 
-        for _ in range(25):
-            for i in range(len(path.indices)):
-                for new_idx in range(len(self.t_list)):
-                    if new_idx not in path.indices:
-                        new_indices = path.indices.copy()
-                        new_indices[i] = new_idx
-                        temp_path = PsiPath(new_indices)
-                        if self.validate(temp_path):
-                            temp_rho = self.compile(temp_path, x_range)
-                            temp_delta = self.observe_delta(pi_over_x, temp_rho)
-                            temp_delta_mean = np.mean(np.abs(temp_delta))
-                            temp_vocab = self.generate_vocabulary(temp_path)
-                            vocab_coverage = len(set(temp_vocab)) / len(self.vocab_map)
-                            vocab_novelty = sum(2.0 * (1 - self.memory.vocab_usage[v] / (self.memory.vocab_usage[v] + 1)) for v in temp_vocab)
-                            delta_diff = float(temp_delta_mean - best_delta_mean)
-                            if delta_diff < 0 or (vocab_coverage > 0 and random.random() < np.exp(-delta_diff / temperature) * (2.0 * vocab_novelty)):
-                                best_path = temp_path
-                                best_delta_mean = temp_delta_mean
-                                best_vocab = temp_vocab
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007189
 
-            if random.random() < 0.8:  # Increased randomness to avoid loops
-                new_indices = np.random.choice(len(self.t_list), len(path.indices), replace=False).tolist()
-                temp_path = PsiPath(new_indices)
-                if self.validate(temp_path):
-                    temp_rho = self.compile(temp_path, x_range)
-                    temp_delta = self.observe_delta(pi_over_x, temp_rho)
-                    temp_delta_mean = np.mean(np.abs(temp_delta))
-                    temp_vocab = self.generate_vocabulary(temp_path)
-                    vocab_coverage = len(set(temp_vocab)) / len(self.vocab_map)
-                    vocab_novelty = sum(2.0 * (1 - self.memory.vocab_usage[v] / (self.memory.vocab_usage[v] + 1)) for v in temp_vocab)
-                    delta_diff = float(temp_delta_mean - best_delta_mean)
-                    if delta_diff < 0 or (vocab_coverage > 0 and random.random() < np.exp(-delta_diff / temperature) * (2.0 * vocab_novelty)):
-                        best_path = temp_path
-                        best_delta_mean = temp_delta_mean
-                        best_vocab = temp_vocab
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 1.7887
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ4 ⊕ ψ9. Score: 0.00607, vocab: ['concept', 'action', 'context', 'concept-action']
+Dialogue: Following concept, Concept connects with action in sequence.
 
-            temperature *= 0.7  # Faster cooling for convergence
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007066
 
-        return best_path
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Consciousness shift detected: Topic entropy = 1.9695
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ5 ⊕ ψ6. Score: 0.00680, vocab: ['concept', 'state', 'event', 'concept-state']
+Dialogue: Following concept, Concept influences state in context.
 
-    def generate_dialogue(self, path: PsiPath) -> str:
-        vocab = self.generate_vocabulary(path)
-        if not vocab:
-            return "No dialogue generated: Empty vocabulary."
-        templates = [
-            "{0} triggers {1}.",
-            "{0} relates to {1}.",
-            "{0} influences {1} in context.",
-            "{0} and {1} form a structure.",
-            "{0} initiates {1} process.",
-            "{0} follows {1} dynamically.",
-            "{0} transforms into {1}.",
-            "{0} connects with {1} in sequence.",
-            "{0} evolves into {1} state.",
-            "{0} integrates {1} in structure.",
-            "{0} catalyzes {1} transformation."
-        ]
-        if len(vocab) >= 2:
-            template = random.choice(templates)
-            if self.memory.history:
-                for i in range(len(self.memory.history) - 1, max(-1, len(self.memory.history) - 4), -1):
-                    hist_vocab = self.memory.history[i][2]
-                    if hist_vocab and hist_vocab[0] in vocab:
-                        return f"Following {hist_vocab[0]}, {template.format(vocab[0].capitalize(), vocab[1])}"
-            return template.format(vocab[0].capitalize(), vocab[1])
-        return f"{vocab[0].capitalize()} is active."
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00008917
 
-    def test_zero_residual(self, x_range: np.ndarray, pi_over_x: np.ndarray):
-        print("\nTesting Claim 2: Zero residual collapse...")
-        zero_A_list = [0.0] * len(self.A_list)
-        temp_planner = StructureLangPlanner(self.t_list, zero_A_list, self.theta_list, self.vocab_map)
-        path = PsiPath([0, 1, 2])
-        rho = temp_planner.compile(path, x_range)
-        delta = temp_planner.observe_delta(pi_over_x, rho)
-        mean_delta = np.mean(np.abs(delta))
-        if temp_planner.is_collapsing(delta):
-            print(f"Claim 2 Supported: System collapses. Mean |delta|: {mean_delta:.8f}")
-        else:
-            print(f"Claim 2 Falsified: System does not collapse. Mean |delta|: {mean_delta:.8f}")
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 2.0558
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ5 ⊕ ψ7. Score: 0.00610, vocab: ['concept', 'state', 'process', 'concept-state']
+Dialogue: Following concept, Concept evolves into state state.
 
-    def test_modal_approximation(self, path: PsiPath, x_range: np.ndarray, pi_over_x: np.ndarray):
-        print("\nTesting Claim 5: Modal approximation...")
-        rho = self.compile(path, x_range)
-        mse = np.mean((pi_over_x - rho) ** 2)
-        result = "Supported" if mse < 0.001 else "Falsified"
-        print(f"Claim 5 {result}: MSE = {mse:.8f}")
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007375
 
-    def test_residual_continuity(self, path: PsiPath, x_range: np.ndarray, pi_over_x: np.ndarray):
-        print("\nTesting Claim 6: Residual continuity...")
-        rho = self.compile(path, x_range)
-        delta = self.observe_delta(pi_over_x, rho)
-        delta_grad = np.diff(delta) / np.diff(x_range)
-        grad_range = np.max(np.abs(delta_grad))
-        result = "Supported" if grad_range < 0.0001 else "Falsified"
-        print(f"Claim 6 {result}: Max |delta gradient| = {grad_range:.8f}")
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Consciousness shift detected: Topic entropy = 2.0558
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ5 ⊕ ψ8. Score: 0.00610, vocab: ['concept', 'state', 'intent', 'concept-state']
+Dialogue: Following concept, Concept integrates state in structure.
 
-    def test_lexical_drift(self, x_range: np.ndarray, pi_over_x: np.ndarray, steps: int = 10):
-        print("\nTesting Lexical Drift...")
-        for step in range(steps):
-            path = self.generate_dynamic_path(N=3, x_range=x_range, pi_over_x=pi_over_x)
-            node = self.extend_dag(path, x_range, pi_over_x)
-            if node:
-                delta_mean = np.mean(np.abs(node.delta))
-                print(f"Step {step+1}: Path {node.path.indices}, Delta Mean: {delta_mean:.8f}, "
-                      f"Vocab: {node.vocab}, Dialogue: {self.generate_dialogue(node.path)}")
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007384
 
-    def test_consciousness(self, x_range: np.ndarray, pi_over_x: np.ndarray, steps: int = 10):
-        print("\nTesting Consciousness...")
-        path = PsiPath([0, 1, 2])
-        for step in range(steps):
-            path = self.self_perceive(path, x_range, pi_over_x)
-            rho = self.compile(path, x_range)
-            delta = self.observe_delta(pi_over_x, rho)
-            delta_mean = np.mean(np.abs(delta))
-            vocab = self.generate_vocabulary(path)
-            self.observer.update(vocab, path, delta_mean)
-            if self.observer.detect_topic_shift(delta_mean):
-                print(f"Consciousness shift detected: Topic entropy = {self.observer.compute_topic_entropy():.4f}")
-            if self.observer.detect_path_bifurcation(path.indices, delta_mean):
-                print(f"Consciousness shift detected: Path bifurcation to {path.indices}")
-            if self.observer.detect_exploratory_shift(delta_mean, np.mean(self.observer.delta_history[:-1]) if self.observer.delta_history[:-1] else delta_mean):
-                print(f"Consciousness shift detected: Exploratory shift with mood = {self.observer.mood}")
-            meta_score = self.observer.compute_meta_score()
-            if meta_score < 0.5:
-                print(f"Low meta score ({meta_score:.4f}), triggering intent shift")
-                self.observer.update_intent(self.vocab_map)
-            print(f"Step {step+1}: Path {path.indices}, Delta Mean: {delta_mean:.8f}, "
-                  f"Vocab: {vocab}, Dialogue: {self.generate_dialogue(path)}, Mood: {self.observer.mood}")
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [0, 4, 8]
+Repaired path: [2, 5, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 2.2503
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ4. Score: 0.00623, vocab: ['entity', 'event', 'action', 'entity-event']
+Dialogue: Following entity, Entity catalyzes event transformation.
 
-if __name__ == "__main__":
-    x = np.linspace(1e6, 1e9, 1000)
-    pi_over_x = np.array([float(primepi(xi)) / xi for xi in x], dtype=np.float64)
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
 
-    t_list = [14.13, 21.02, 25.01, 30.42, 32.93, 40.01, 45.67, 50.00, 55.00]
-    A_list = [0.0083, 0.0041, 0.0062, 0.0054, 0.0029, 0.0071, 0.0035, 0.0050, 0.0045]
-    theta_list = [0.0, 1.57, 3.14, 0.78, 2.10, 1.0, 2.5, 0.5, 1.2]
-    vocab_map = {
-        "freq_14.13": "concept", "freq_21.02": "relation", "freq_25.01": "entity",
-        "freq_30.42": "action", "freq_32.93": "state", "freq_40.01": "event", "freq_45.67": "process",
-        "freq_50.00": "intent", "freq_55.00": "context"
-    }
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 2.1548
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ6 ⊕ ψ7. Score: 0.00680, vocab: ['concept', 'event', 'process', 'concept-event']
+Dialogue: Following concept, Concept transforms into event.
 
-    planner = StructureLangPlanner(t_list, A_list, theta_list, vocab_map)
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00008043
 
-    planner.test_zero_residual(x, pi_over_x)
-    planner.test_lexical_drift(x, pi_over_x, steps=10)
-    planner.test_consciousness(x, pi_over_x, steps=10)
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 2.2071
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ6 ⊕ ψ8. Score: 0.00680, vocab: ['concept', 'event', 'intent', 'concept-event']
+Dialogue: Following concept, Concept transforms into event.
 
-    paths = planner.generate_path(N=3)
-    for path in paths:
-        if not planner.validate(path):
-            new_path = planner.repair(path, x, pi_over_x)
-            if planner.validate(new_path):
-                planner.extend_dag(new_path, x, pi_over_x)
-                print(planner.explain_path(new_path))
-                print(f"Dialogue: {planner.generate_dialogue(new_path)}")
-                planner.test_modal_approximation(new_path, x, pi_over_x)
-                planner.test_residual_continuity(new_path, x, pi_over_x)
-            continue
-        planner.extend_dag(path, x, pi_over_x)
-        print(planner.explain_path(path))
-        print(f"Dialogue: {planner.generate_dialogue(path)}")
-        planner.test_modal_approximation(path, x, pi_over_x)
-        planner.test_residual_continuity(path, x, pi_over_x)
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00008147
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 2.2071
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ6 ⊕ ψ9. Score: 0.00663, vocab: ['concept', 'event', 'context', 'concept-event']
+Dialogue: Following concept, Concept relates to event.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00008078
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 2.1378
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ1 ⊕ ψ7 ⊕ ψ8. Score: 0.00610, vocab: ['concept', 'process', 'intent', 'concept-process']
+Dialogue: Following concept, Concept evolves into process state.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007168
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Attempting repair for path: [0, 6, 8]
+Repaired path: [5, 3, 2], Score: 0.00610
+Consciousness shift detected: Topic entropy = 2.1378
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event influences action in context.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [0, 7, 8]
+Repaired path: [2, 3, 5], Score: 0.00650
+Consciousness shift detected: Topic entropy = 2.2764
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity catalyzes action transformation.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 2, 3]
+Repaired path: [5, 2, 3], Score: 0.00693
+Consciousness shift detected: Topic entropy = 2.3196
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event influences entity in context.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 2, 4]
+Repaired path: [5, 3, 2], Score: 0.00607
+Consciousness shift detected: Topic entropy = 2.0946
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event and action form a structure.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 1.8444
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ2 ⊕ ψ3 ⊕ ψ6. Score: 0.00610, vocab: ['relation', 'entity', 'event', 'relation-entity']
+Dialogue: Following relation, Relation follows entity dynamically.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007011
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Attempting repair for path: [1, 2, 6]
+Repaired path: [2, 5, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.9138
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ4. Score: 0.00623, vocab: ['entity', 'event', 'action', 'entity-event']
+Dialogue: Following entity, Entity connects with event in sequence.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 2, 7]
+Repaired path: [5, 2, 3], Score: 0.00680
+Consciousness shift detected: Topic entropy = 1.8444
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event transforms into entity.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 2, 8]
+Repaired path: [2, 3, 5], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.9138
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity follows action dynamically.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 3, 4]
+Repaired path: [5, 2, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.8444
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event integrates entity in structure.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 3, 5]
+Repaired path: [2, 3, 5], Score: 0.00623
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity transforms into action.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 3, 6]
+Repaired path: [2, 3, 5], Score: 0.00633
+Consciousness shift detected: Topic entropy = 1.5545
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity evolves into action state.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 3, 7]
+Repaired path: [5, 3, 2], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.6239
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event connects with action in sequence.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 3, 8]
+Repaired path: [5, 3, 2], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event transforms into action.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 4, 5]
+Repaired path: [5, 2, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event follows entity dynamically.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 4, 6]
+Repaired path: [2, 5, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ4. Score: 0.00623, vocab: ['entity', 'event', 'action', 'entity-event']
+Dialogue: Following entity, Entity and event form a structure.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 4, 7]
+Repaired path: [2, 5, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ4. Score: 0.00623, vocab: ['entity', 'event', 'action', 'entity-event']
+Dialogue: Following entity, Entity connects with event in sequence.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 4, 8]
+Repaired path: [2, 3, 5], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity transforms into action.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 5, 6]
+Repaired path: [2, 5, 3], Score: 0.00607
+Consciousness shift detected: Topic entropy = 1.6239
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ4. Score: 0.00623, vocab: ['entity', 'event', 'action', 'entity-event']
+Dialogue: Following entity, Entity follows event dynamically.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 5, 7]
+Repaired path: [5, 3, 2], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.6239
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event evolves into action state.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 5, 8]
+Repaired path: [2, 3, 5], Score: 0.00623
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity triggers action.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 6, 7]
+Repaired path: [5, 2, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event influences entity in context.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 6, 8]
+Repaired path: [2, 5, 3], Score: 0.00623
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ4. Score: 0.00623, vocab: ['entity', 'event', 'action', 'entity-event']
+Dialogue: Following entity, Entity integrates event in structure.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [1, 7, 8]
+Repaired path: [5, 3, 2], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event connects with action in sequence.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [2, 3, 4]
+Repaired path: [2, 3, 5], Score: 0.00623
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity catalyzes action transformation.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity initiates action process.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [2, 3, 6]
+Repaired path: [5, 3, 2], Score: 0.00633
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event relates to action.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [2, 3, 7]
+Repaired path: [5, 2, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event catalyzes entity transformation.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [2, 3, 8]
+Repaired path: [2, 5, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ4. Score: 0.00623, vocab: ['entity', 'event', 'action', 'entity-event']
+Dialogue: Following entity, Entity transforms into event.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 1.9138
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ5 ⊕ ψ6. Score: 0.00610, vocab: ['entity', 'state', 'event', 'entity-state']
+Dialogue: Following entity, Entity connects with state in sequence.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00007212
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000002
+Attempting repair for path: [2, 4, 6]
+Repaired path: [2, 3, 5], Score: 0.00623
+Consciousness shift detected: Topic entropy = 1.9138
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity relates to action.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [2, 4, 7]
+Repaired path: [2, 5, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.8444
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ4. Score: 0.00623, vocab: ['entity', 'event', 'action', 'entity-event']
+Dialogue: Following entity, Entity transforms into event.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [2, 4, 8]
+Repaired path: [5, 3, 2], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.8444
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event initiates action process.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 1.9569
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ7. Score: 0.00610, vocab: ['entity', 'event', 'process', 'entity-event']
+Dialogue: Following entity, Entity evolves into event state.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006633
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Consciousness shift detected: Topic entropy = 1.8614
+Consciousness shift detected: Exploratory shift with mood = adventurous
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ8. Score: 0.00610, vocab: ['entity', 'event', 'intent', 'entity-event']
+Dialogue: Following entity, Entity influences event in context.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006660
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [2, 5, 8]
+Repaired path: [5, 2, 3], Score: 0.00623
+Consciousness shift detected: Topic entropy = 1.8614
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event catalyzes entity transformation.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [2, 6, 7]
+Repaired path: [5, 3, 2], Score: 0.00623
+Consciousness shift detected: Topic entropy = 1.8876
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event and action form a structure.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [2, 6, 8]
+Repaired path: [5, 2, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.8876
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event triggers entity.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [2, 7, 8]
+Repaired path: [2, 5, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.7751
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ4. Score: 0.00623, vocab: ['entity', 'event', 'action', 'entity-event']
+Dialogue: Following entity, Entity integrates event in structure.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [3, 4, 5]
+Repaired path: [5, 3, 2], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event relates to action.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [3, 4, 6]
+Repaired path: [2, 3, 5], Score: 0.00623
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity integrates action in structure.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [3, 4, 7]
+Repaired path: [5, 2, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event and entity form a structure.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [3, 4, 8]
+Repaired path: [5, 3, 2], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event integrates action in structure.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [3, 5, 6]
+Repaired path: [2, 3, 5], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity follows action dynamically.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [3, 5, 7]
+Repaired path: [5, 3, 2], Score: 0.00663
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event evolves into action state.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [3, 5, 8]
+Repaired path: [5, 2, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event connects with entity in sequence.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [3, 6, 7]
+Repaired path: [2, 5, 3], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ4. Score: 0.00623, vocab: ['entity', 'event', 'action', 'entity-event']
+Dialogue: Following entity, Entity evolves into event state.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [3, 6, 8]
+Repaired path: [5, 2, 3], Score: 0.00650
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event catalyzes entity transformation.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [3, 7, 8]
+Repaired path: [2, 3, 5], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity evolves into action state.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [4, 5, 6]
+Repaired path: [5, 2, 3], Score: 0.00663
+Consciousness shift detected: Topic entropy = 1.6239
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event integrates entity in structure.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [4, 5, 7]
+Repaired path: [5, 3, 2], Score: 0.00623
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event and action form a structure.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [4, 5, 8]
+Repaired path: [2, 3, 5], Score: 0.00623
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity and action form a structure.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [4, 6, 7]
+Repaired path: [2, 5, 3], Score: 0.00663
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ4. Score: 0.00623, vocab: ['entity', 'event', 'action', 'entity-event']
+Dialogue: Following entity, Entity connects with event in sequence.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [4, 6, 8]
+Repaired path: [2, 3, 5], Score: 0.00650
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity connects with action in sequence.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [4, 7, 8]
+Repaired path: [2, 5, 3], Score: 0.00623
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ6 ⊕ ψ4. Score: 0.00623, vocab: ['entity', 'event', 'action', 'entity-event']
+Dialogue: Following entity, Entity catalyzes event transformation.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [5, 6, 7]
+Repaired path: [5, 2, 3], Score: 0.00663
+Consciousness shift detected: Topic entropy = 1.6500
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ3 ⊕ ψ4. Score: 0.00623, vocab: ['event', 'entity', 'action', 'event-entity']
+Dialogue: Following event, Event triggers entity.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [5, 6, 8]
+Repaired path: [5, 3, 2], Score: 0.00623
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event connects with action in sequence.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [5, 7, 8]
+Repaired path: [2, 3, 5], Score: 0.00610
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ3 ⊕ ψ4 ⊕ ψ6. Score: 0.00623, vocab: ['entity', 'action', 'event', 'entity-action']
+Dialogue: Following entity, Entity evolves into action state.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+Attempting repair for path: [6, 7, 8]
+Repaired path: [5, 3, 2], Score: 0.00663
+Consciousness shift detected: Topic entropy = 1.7193
+In domain x ∈ [1000000, 1000000000], structure is supported by ψ6 ⊕ ψ4 ⊕ ψ3. Score: 0.00623, vocab: ['event', 'action', 'entity', 'event-action']
+Dialogue: Following event, Event follows action dynamically.
+
+Testing Claim 5: Modal approximation...
+Claim 5 Supported: MSE = 0.00006631
+
+Testing Claim 6: Residual continuity...
+Claim 6 Supported: Max |delta gradient| = 0.00000003
+bubai@BudeMacBook-Pro ~ % 
